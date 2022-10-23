@@ -54,7 +54,7 @@ class Account(AbstractBaseUser,PermissionsMixin):
         return True
 
 class EncargadoArea(models.Model):
-    email = models.CharField(null=True, max_length=30)
+    email = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True, max_length=30)
     nombre =models.CharField(null=True,max_length=30)
     apellido_pater= models.CharField(null=True,max_length=30)
     apellido_mater= models.CharField(null=True,max_length=30)
@@ -69,7 +69,7 @@ class Area(models.Model):
        encargado = models.OneToOneField(EncargadoArea,on_delete=models.CASCADE,null=True)
 
 class Administrador(models.Model):
-    email = models.CharField(null=True, max_length=30)
+    email = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True, max_length=30)
     nombre =models.CharField(null=True,max_length=30)
     apellido_pater= models.CharField(null=True,max_length=30)
     apellido_mater= models.CharField(null=True,max_length=30)
@@ -110,6 +110,7 @@ class Documento(models.Model):
     proveedor = models.ForeignKey(Proveedor,on_delete=models.CASCADE,null=True)
     encargado = models.ForeignKey(EncargadoArea,on_delete=models.CASCADE,null=True)
     pedido = models.CharField(null=True,max_length=300)
+    data_created=models.DateField(auto_now_add=True,null=True)
 
     def __str__(self):
         return self.estado

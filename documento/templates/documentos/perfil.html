@@ -18,7 +18,7 @@
         <div style="text-align: center" class="card card-body">
             <h3 style="text-align: center"> Configuracion de Perfil</h3>
             <hr>
-            <img class="profile-pic" src="">
+            <img class="profile-pic" src="{{request.user.encargadoarea.foto_perfil.url}}">
             <hr>
         </div>
       </div>
@@ -34,4 +34,6 @@
         </div>
     </div>
     </div>        
+
+
 {% endblock %}

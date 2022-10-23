@@ -3,8 +3,8 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
     <!--Logos de la pagina-->
-    <a class="sidebar-brand brand-logo" href=""><img src="/static/imagenes/rojito.jpeg" alt="logo" /></a>
-    <a class="sidebar-brand brand-logo-mini" href=""><img src="/static/imagenes/mini.jpeg" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo" href=""><img src="" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo-mini" href=""><img src="" alt="logo" /></a>
   </div>
     <!--Fin de logos-->
 
@@ -15,16 +15,15 @@
     <li class="nav-item profile">
       <div class="profile-desc">
         <div class="profile-pic">
-          <div class="count-indicator">
-          </div>
+          
           <div class="profile-name">
-            <h5 class="mb-0 font-weight-normal"></h5>
+            <h5 class="mb-0 font-weight-normal">{{request.user.username}}</h5>
           </div>
         </div>
-        <a href="#" id="profile-dropdown" data-toggle="dropdown"></a>
+        <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
         <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
           <div class="dropdown-divider"></div>
-          <a href="" class="dropdown-item preview-item">
+          <a href="{% url 'logout' %}" class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <div class="preview-icon bg-dark rounded-circle">
                 <i class="mdi mdi-logout"></i>
@@ -38,10 +37,13 @@
         </div>
       </div>
     </li>
-    <!--Inicio NavBar Admin
-    
+    <!-- Fin NavBard-->
+
+
+    <!--Inicio NavBar Admin-->
+{% if user.groups.all.0.name == "admin" %} 
     <li class="nav-item menu-items">
-      <a class="nav-link" href="">
+      <a class="nav-link" href="{% url 'home' %}">
         <span class="menu-icon">
           <i class="mdi mdi-home"></i>
         </span>
@@ -49,57 +51,51 @@
       </a>
     </li>
     <li class="nav-item menu-items">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+      <a class="nav-link" href="{% url 'solicitudes' %}">
         <span class="menu-icon">
-          <i class="mdi mdi-account-plus"></i>
+          <i class="mdi mdi-home"></i>
         </span>
-        <span class="menu-title">Registrar Perfil</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="">Alumnos</a></li>
-          <li class="nav-item"> <a class="nav-link" href="">Profesores</a></li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item menu-items">
-      <a class="nav-link" href="">
-        <span class="menu-icon">
-          <i class="mdi mdi-school"></i>
-        </span>
-        <span class="menu-title">Alumnos</span>
+        <span class="menu-title">Solicitudes</span>
       </a>
     </li>
     <li class="nav-item menu-items">
       <a class="nav-link" href="">
         <span class="menu-icon">
-          <i class="mdi mdi-account-multiple"></i>
+          <i class="mdi mdi-home"></i>
         </span>
-        <span class="menu-title">Profesores</span>
+        <span class="menu-title">Documentos</span>
+      </a>
+    </li>
+    <li class="nav-item menu-items">
+      <a class="nav-link" href="{% url 'empleados' %}">
+        <span class="menu-icon">
+          <i class="mdi mdi-home"></i>
+        </span>
+        <span class="menu-title">Encargados de Area</span>
       </a>
     </li>
     <li class="nav-item menu-items">
       <a class="nav-link" href="">
         <span class="menu-icon">
-          <i class="mdi mdi-chair-school"></i>
+          <i class="mdi mdi-home"></i>
         </span>
-        <span class="menu-title">Aulas</span>
+        <span class="menu-title">Provedores</span>
       </a>
     </li>
     <li class="nav-item menu-items">
       <a class="nav-link" href="">
         <span class="menu-icon">
-          <i class="mdi mdi-book-open-page-variant"></i>
+          <i class="mdi mdi-home"></i>
         </span>
-        <span class="menu-title">Cursos</span>
+        <span class="menu-title">Registrar Usuarios</span>
       </a>
     </li>
-  </ul>
-  Fin NavBar Admin-->
 
-  <!--Inicio NavBar Alumnos-->
-  
+{% endif %}
+  <!--Fin NavBar Admin-->
+
+  <!--Inicio NavBar Encargado_Area-->
+{% if user.groups.all.0.name == "a_encargado" %}  
   <li class="nav-item menu-items">
     <a class="nav-link" href="{% url 'home' %}">
       <span class="menu-icon">
@@ -132,5 +128,6 @@
       <span class="menu-title">Perfil</span>
     </a>
   </li>
-  <!--Fin NavBar Alumnos-->
+{% endif %}
+  <!--Fin NavBar Encargado_Area-->
 </nav>

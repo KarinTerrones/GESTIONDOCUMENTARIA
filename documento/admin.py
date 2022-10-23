@@ -24,7 +24,7 @@ class ProveedorAdmin(admin.ModelAdmin):
     list_display =('razon_social','contacto','categoria')
 
 class DocumentoAdmin(admin.ModelAdmin):
-    list_display =('id','nombre','tipo','estado','proveedor','encargado')
+    list_display =('id','nombre','tipo','estado','proveedor','encargado','data_created')
 
 admin.site.register(EncargadoArea,EncargadoAreaAdmin)
 admin.site.register(Area,AreaAdmin)
