@@ -1,0 +1,39 @@
+{% extends 'documentos/main.html'%}
+{% block content %}
+{% include 'documentos/registrar_proveedor.html' %}
+<div class="card-body">
+<button type="button" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#agregarModal">
+	<i class="fa-solid fa-book-medical"></i>Agregar Proveedor
+</button>
+<br>
+
+		<div class="table-responsive">
+			<form method="get" class="forms-sample">
+				
+				<button class="btn btn-buscar" type="submit"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Buscar</button>
+			</form>
+			<br>
+		<table style="text-align:center;" class="table  table-bordered ">
+				<tr style="color:#000000;">
+					<th>Razon Social</th>
+					<th>RUC</th>
+					<th>Contacto</th>
+					<th>Categoria</th>
+					<th>Editar</th>
+					<th>Eliminar</th>
+				</tr>
+				{% for prove in prove %}
+				<tr>
+				    <td>{{prove.razon_social}}</td>
+					<td>{{prove.ruc}}</td>
+				    <td>{{prove.contacto}}</td>
+                    <td>{{prove.categoria}}</td>
+				    <td><a class="btn btn-sm btn-primary btn-rounded"  href="{% url 'editar_proveedor' prove.id %}"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Editar</a></td>
+					<td><a class="btn btn-sm btn-danger btn-rounded"  href="{% url 'eliminar_proveedor' prove.id %}"><i class="fa-solid fa-trash-can"></i>&nbsp; Eliminar</a></td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+{% endblock %}
+

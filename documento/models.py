@@ -59,7 +59,7 @@ class EncargadoArea(models.Model):
     apellido_pater= models.CharField(null=True,max_length=30)
     apellido_mater= models.CharField(null=True,max_length=30)
     celular = models.CharField(null=True,max_length=9)
-    foto_perfil=models.ImageField(null=True,blank=True)
+    foto_perfil=models.ImageField(default="profile.png",null=True,blank=True)
     data_created=models.DateField(auto_now_add=True,null=True)
     def __str__(self):
         return self.nombre+""+self.apellido_pater
@@ -67,6 +67,10 @@ class EncargadoArea(models.Model):
 class Area(models.Model):
        nombre = models.CharField(null=True,max_length=20)
        encargado = models.OneToOneField(EncargadoArea,on_delete=models.CASCADE,null=True)
+       def __str__(self):
+        return self.nombre
+    
+
 
 class Administrador(models.Model):
     email = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True, max_length=30)
@@ -87,6 +91,7 @@ class Categoria(models.Model):
 
 class Proveedor(models.Model):
     razon_social = models.CharField(null=True,max_length=30)
+    ruc = models.CharField(null=True,max_length=11)
     contacto = models.CharField(null=True,max_length=9)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True)
     foto_perfil=models.ImageField(null=True,blank=True)
@@ -95,22 +100,26 @@ class Proveedor(models.Model):
         return self.razon_social
 
 class Documento(models.Model):
-    opciones = (('opcion1','opcion1'),
-                ('opcion2','opcion2'),
-                ('opcion3','opcion3'),
-                ('opcion4','opcion4'))
+    opciones = (('Pedido','Pedido'),
+                ('Requerimiento','Requerimiento'))
 
     estado = (('Evaluando','Evaluando'),
                 ('Aprobado','Aprobado'),
-                ('Rechazado','Rechazado'),
-                ('Observado','Observado'))
+                ('Rechazado','Rechazado'),)
     nombre = models.CharField(null=True,max_length=30)
     tipo = models.CharField(choices=opciones, null=True,max_length=20)
     estado = models.CharField(default="Evaluando",choices=estado, null=True,max_length=20)
     proveedor = models.ForeignKey(Proveedor,on_delete=models.CASCADE,null=True)
-    encargado = models.ForeignKey(EncargadoArea,on_delete=models.CASCADE,null=True)
+    encargado = models.ForeignKey(Area,on_delete=models.CASCADE,null=True)
     pedido = models.CharField(null=True,max_length=300)
     data_created=models.DateField(auto_now_add=True,null=True)
 
     def __str__(self):
         return self.estado
+    
+class Factura(models.Model):
+    proveedor = models.ForeignKey(Proveedor,on_delete=models.CASCADE,null=True)
+    area = models.ForeignKey(Area,on_delete=models.CASCADE, null=True)
+    archivo = models.FileField(null=True)
+    def __str__(self):
+        return self.proveedor.razon_social

@@ -1,0 +1,24 @@
+{% extends 'documentos/main.html'%}
+{% load static %}
+{% block content %}
+<style>
+	.card{
+		background: rgb(105, 51, 148, 0.05);
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin: auto;
+        width: 40%;
+        padding: 10px;
+    }
+</style>
+<br>
+
+<div style="text-align:center;" class="card card-body">
+			<p>Esta seguro que quiere eliminar al encargado "{{emple.nombre}}"?</p>
+
+				<form action="{% url 'eliminar_empleado' emple.id %}" method="POST">
+				{% csrf_token %}
+				<a class="btn btn-dark" href="{% url 'empleados' %}">Cancel</a>
+				<input class="btn btn-danger" type="submit" name="Confirm" value="Eliminar">
+		</form>
+</div>
+{% endblock %}

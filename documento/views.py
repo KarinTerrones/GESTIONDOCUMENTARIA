@@ -1,7 +1,7 @@
 import io
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse
-from requests import RequestException
 from documento.models import *
 from documento.forms import *
 from django.contrib import messages
@@ -9,7 +9,6 @@ from .filters import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user,allow_users,admin_only
-import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -32,10 +31,7 @@ def Registro_Encargado(request):
 		form = CreateUserForm(request.POST)
 		if form.is_valid():
 			form.save()
-			email = form.cleaned_data.get('email')
-			messages.success(request,'Cuenta creada exitosamente: ' + email)
-			return redirect ('home')
-
+		return redirect ('registrar_perfil')
 	context= {'r_form':r_form}
 	return render(request,'documentos/registrar.html',context)
 
@@ -101,28 +97,180 @@ def solicitudes_admin(request):
 
 def info_encargado_are(request):
 	area = Area.objects.all()
-	context = {'area':area}
+	form_regis = RegistrarEncargado()
+	if request.method == "POST":
+		form_regis = RegistrarEncargado(request.POST)
+		if form_regis.is_valid():
+			form_regis.save()
+			return redirect ('empleados')
+	context = {'area':area,'form_reg':form_regis}
 	return render ( request, 'documentos/empleados.html',context)
 
-def generar_pdf(request):
+def editar_encargado_area(request,pk):
+	area = Area.objects.get(id=pk)
+	form_enc = Editar_Encargado(instance=area)
+	if request.method == 'POST':
+		form_enc = Editar_Encargado(request.POST,instance=area)
+		if form_enc.is_valid():
+			form_enc.save()
+			return redirect('empleados')
+	context = {'encargado':area,'form_enc':form_enc}
+	return render (request,'documentos/editar_empleado.html',context)
+
+def eliminar_encargado_area(request,pk):
+	emple= EncargadoArea.objects.get(id=pk)
+	if request.method== "POST":
+		emple.delete()
+		return redirect ('empleados')
+	context = {'emple':emple}
+	return render (request,'documentos/eliminar_empleados.html',context)
+
+def registrar_proveedor(request):
+	form_reg = RegistarProveedor()
+	if request.method == 'POST':
+		form_reg = RegistarProveedor(request.POST)
+		if form_reg.is_valid():
+			form_reg.save()
+	context = {'form_r':form_reg}
+	return render (request,'documentos/registar_proveedor.html',context)
+
+def view_proveedor(request):
+	proveedor = Proveedor.objects.all()
+	form_reg = RegistarProveedor()
+	if request.method == 'POST':
+		form_reg = RegistarProveedor(request.POST)
+		if form_reg.is_valid():
+			form_reg.save()
+			return redirect ('proveedores')
+	context = {'prove':proveedor,'form_r':form_reg}
+	return render (request,'documentos/proveedores.html',context)
+
+def editar_proveedor(request,pk):
+	provee = Proveedor.objects.get(id=pk)
+	form_prove = EditarProveedor(instance=provee)
+	if request.method == "POST":
+		form_prove = EditarProveedor(request.POST,instance=provee)
+		if form_prove.is_valid():
+			form_prove.save()
+			return redirect ("proveedores")
+	context = {'form_p':form_prove}
+	return render (request,'documentos/editar_proveedor.html',context)
+
+def eliminar_proveedor(request,pk):
+	provee = Proveedor.objects.get(id=pk)
+	if request.method == "POST":
+		provee.delete()
+		return redirect ('proveedores')
+	context = {'provee':provee}
+	return render (request,'documentos/eliminar_proveedor.html',context)
+
+def view_facturas(request):
+	fact = Factura.objects.all()
+	form_regfac= RegistrarFactura()
+	if request.method =='POST':
+		form_regfac = RegistrarFactura (request.POST,request.FILES)
+		if form_regfac.is_valid():
+			form_regfac.save()
+			return redirect('facturas')
+	context = {'fact':fact,'form':form_regfac}
+	return render( request,'documentos/documentos.html',context)
+
+def editar_facturas(request,pk):
+	factura = Factura.objects.get(id=pk)
+	form_edt = EditarFactura(instance=factura)
+	if request.method == 'POST':
+		form_edt = EditarFactura(request.POST,request.FILES,instance=factura)
+		if form_edt.is_valid():
+			form_edt.save()
+			return redirect ("facturas")
+	context = {'form_et':form_edt}
+	return render (request,'documentos/editar_factura.html',context)
+
+def eliminar_factura(request,pk):
+	factura = Factura.objects.get(id=pk)
+	if request.method == "POST":
+		factura.delete()
+		return redirect ('facturas')
+	context = {'factura':factura}
+	return render (request,'documentos/eliminar_factura.html',context)
+
+def registrar_encargado_area(request):
+	form_regis = RegistrarEncargado()
+	if request.method == "POST":
+		form_regis = RegistrarEncargado(request.POST)
+		if form_regis.is_valid():
+			form_regis.save()
+			return redirect ('home')
+	context = {'form_reg':form_regis}
+	return render (request,'documentos/registrar_encargado.html',context)
+
+def registrar_perfil_encargado(request):
+	form_per=RegistrarPerfilEncargado()
+	if request.method == "POST":
+		form_per = RegistrarPerfilEncargado(request.POST,request.FILES)
+		if form_per.is_valid():
+			form_per.save()
+			return redirect('home')
+	context = {'form_pef':form_per}
+	return render (request,'documentos/registrar_perfil_encargado.html',context)
+
+def editar_solicitud(request,pk):
+	doc = Documento.objects.get(id=pk)
+	form_doc = EditarSolicitud(instance=doc)
+	if request.method == 'POST':
+		form_doc = EditarSolicitud(request.POST,instance=doc)
+		if form_doc.is_valid():
+			form_doc.save()
+			return redirect('solicitudes') 
+
+	context = {'form_s':form_doc}
+	return render (request,'documentos/editar_solic.html',context)
+
+def generar_pdf_total(request):
+	buf = io.BytesIO()
+	c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+	textob = c.beginText()
+	textob.setTextOrigin(inch, inch)
+	textob.setFont('Helvetica',14)
+
+	documentos = Documento.objects.all()
+
+	lines = []
+
+	for documento in documentos :
+		lines.append(documento.nombre)
+		lines.append(documento.tipo)
+		lines.append(documento.estado)
+		lines.append(documento.proveedor.razon_social)
+		lines.append(documento.pedido)
+		lines.append("")
+		
+	for line in lines:
+		textob.textLine(line)
+	
+	c.drawText(textob)
+	c.showPage()
+	c.save()
+	buf.seek(0)
+	return FileResponse (buf, as_attachment=True,filename="Historial.pdf")
+
+def generar_pdf(request,pk):
 		buf = io.BytesIO()
 		c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
 		textob = c.beginText()
 		textob.setTextOrigin(inch, inch)
 		textob.setFont('Helvetica',14)
 
-		documentos = Documento.objects.all()
+		documentos = Documento.objects.get(id=pk)
 		lines = []
 		
 
-		for documento in documentos:
-			lines.append(documento.nombre)
-			lines.append(documento.tipo)
-			lines.append(documento.estado)
-			lines.append(documento.proveedor.razon_social)
-			lines.append(documento.encargado.nombre)
-			lines.append(documento.pedido)
-			lines.append("")
+		lines.append(documentos.nombre)
+		lines.append(documentos.tipo)
+		lines.append(documentos.estado)
+		lines.append(documentos.proveedor.razon_social)
+		lines.append(documentos.pedido)
+		lines.append("")
 
 		for line in lines:
 			textob.textLine(line)

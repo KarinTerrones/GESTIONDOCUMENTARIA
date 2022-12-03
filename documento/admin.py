@@ -12,7 +12,7 @@ class AccAdmin(UserAdmin):
     fieldsets = ()
 
 class EncargadoAreaAdmin(admin.ModelAdmin):
-    list_display =('email','nombre','apellido_pater','celular')
+    list_display =('id','email','nombre','apellido_pater','celular')
 
 class AreaAdmin(admin.ModelAdmin):
     list_display =('nombre','encargado')    
@@ -21,10 +21,13 @@ class AdministradorAdmin(admin.ModelAdmin):
     list_display =('email','nombre','apellido_pater','celular')
 
 class ProveedorAdmin(admin.ModelAdmin):
-    list_display =('razon_social','contacto','categoria')
+    list_display =('razon_social','ruc','contacto','categoria')
 
 class DocumentoAdmin(admin.ModelAdmin):
     list_display =('id','nombre','tipo','estado','proveedor','encargado','data_created')
+
+class FacturasAdmin(admin.ModelAdmin):
+    list_display = ("id","proveedor","area","archivo")
 
 admin.site.register(EncargadoArea,EncargadoAreaAdmin)
 admin.site.register(Area,AreaAdmin)
@@ -33,3 +36,4 @@ admin.site.register(Categoria)
 admin.site.register(Proveedor,ProveedorAdmin)
 admin.site.register(Documento,DocumentoAdmin)
 admin.site.register(Account,AccAdmin)
+admin.site.register(Factura,FacturasAdmin)

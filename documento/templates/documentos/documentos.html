@@ -1,0 +1,36 @@
+{% extends 'documentos/main.html'%}
+{% block content %}
+{% include 'documentos/registrar_documentos.html' %}
+<div class="card-body">
+    <button type="button" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#agregarModal">
+        <i class="fa-solid fa-book-medical"></i>Registrar Factura
+    </button>
+    <br>
+    
+            <div class="table-responsive">
+                <form method="get" class="forms-sample">
+                    
+                    <button class="btn btn-buscar" type="submit"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Buscar</button>
+                </form>
+                <br>
+            <table style="text-align:center;" class="table  table-bordered ">
+                    <tr style="color:#000000;">
+                        <th>Proveedor</th>
+                        <th>Area</th>
+                        <th>Factura</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                    {% for fact in fact %}
+                    <tr>
+                        <td>{{fact.proveedor.razon_social}}</td>
+                        <td>{{fact.area}}</td>
+                        <td><a href="{{ fact.archivo.url }}" download>Descargar</a></td>
+                        <td><a class="btn btn-sm btn-primary btn-rounded"  href="{% url 'editar_factura' fact.id %}"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Editar</a></td>
+                        <td><a class="btn btn-sm btn-danger btn-rounded"  href="{% url 'eliminar_factura' fact.id %}"><i class="fa-solid fa-trash-can"></i>&nbsp; Eliminar</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+{% endblock %}

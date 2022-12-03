@@ -1,0 +1,21 @@
+<div class="modal fade" id="agregarModal" tabindex="-1" role="dialog" aria-labelledby="agregarModal" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title">Registrar Factura</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+            <form method='POST'action=""  enctype="multipart/form-data" >
+                {% csrf_token %}
+                <div class="modal-body"> 
+                {{form.as_p}}
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-primary" type="submit" name="Submit" value="Registrar Factura">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

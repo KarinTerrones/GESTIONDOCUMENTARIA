@@ -5,33 +5,68 @@
         <form method="get">
             <label for="">&nbsp;&nbsp;</label>{{filtro.form}}
             <button class="btn-inverse-primary " type="submit"><i class="fa-solid fa-magnifying-glass"></i> &nbsp;&nbsp;Buscar</button>
+            
+            <a class="btn btn-sm btn-inverse-primary btn-rounded" href="{% url 'generar_historial'  %}">Generar Historial</a>
         </form>
 <br>
+
 <table style="text-align:center;" class="table table-bordered">
    <tr style="color:#000000;">
+        <th>ID</th>
         <th>Asunto</th>
-        <th>Tipo</th>
         <th>Estado</th>
-        <th>Proveedor</th>
-        <th>Solicitante</th>
+        <th>Tipo Pedido</th>
         <th>Fecha Solicitud</th>
-        <th>Area</th>
         <th>Visualizar</th>
+        <th>Resultado</th>
    </tr> 
     {% for solic in solic %}
-        <tr>
+        <tr><td>{{solic.id}}</td>
             <td>{{solic.nombre}}</td>
-            <td>{{solic.tipo}}</td>
             <td>
+            {% if solic.estado == "Evaluando" %}
             <div class="badge badge-outline-warning">{{solic.estado}}</div>
             </td>
-            <td>{{solic.proveedor}}</td>
-            <td>{{solic.encargado}}</td>
+            {% endif %}
+            {% if solic.estado == "Aprobado" %}
+            <div class="badge badge-outline-success">{{solic.estado}}</div>
+            </td>
+            {% endif %}
+            {% if solic.estado == "Rechazado" %}
+            <div class="badge badge-outline-danger">{{solic.estado}}</div>
+            </td>
+            {% endif %}
+            {% if solic.estado == "Observado" %}
+            <div class="badge badge-outline-dark">{{solic.estado}}</div>
+            </td>
+            {% endif %}
+            <td>{{solic.tipo}}</td>
             <td>{{solic.data_created}}</td>
-            <td>{{solic.encargado.area.nombre}}</td>
-            <td><a class="btn btn-sm btn-info btn-rounded" href="{% url 'generar_pedido'  %}"><i class="fa-solid fa-eye"></i>&nbsp;Descargar</a></td>
+            <td><a class="btn btn-sm btn-info btn-rounded" href="{% url 'generar_pedido' solic.id  %}"><i class="fa-solid fa-eye"></i>&nbsp;Descargar</a></td>
+            <td><a class="btn btn-sm btn-primary btn-rounded"  href="{% url 'editar_solicitud' solic.id %}"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Actualizar Estado</a></td>
         </tr>
     {% endfor %}
 </table>
 </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+                {{form.as_p}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <input  class="btn btn-primary"  type="submit" value="Guardar">
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
